@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3
 import re
-
+import uuid
 app = Flask(__name__)
 
 # Connect to SQLite database
@@ -143,6 +143,15 @@ def search_clients():
         return jsonify({'error': 'Provide either user_id or name parameter'}), 400
     clients = cursor.fetchall()
     return jsonify(clients)
+@app.route('/clients', methods=['POST', 'GET'])
+def manage_clients():
+    if request.method == 'POST':
+        # Create a new client
+        client_data = request.get_json()
+        # Assign a unique client_id, for example using UUID
+        client_id = str(uuid.uuid4())
+        clients[client_id] = client_data
+        return jsonify({"message": "Client created successfully"})
 
 if __name__ == '__main__':
     app.run(debug=True)
